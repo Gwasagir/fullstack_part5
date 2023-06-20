@@ -6,7 +6,7 @@ import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [info, setInfo] = useState({ message: null})
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -33,26 +33,41 @@ const App = () => {
 
   const createBlog= (event) => {
     event.preventDefault()
-    const blogObject = {
-      title: title,
-      author: author,
-      url: url,
-      userId: user.id
-    }
+    try {
+      const blogObject = {
+        title: title,
+        author: author,
+        url: url,
+        userId: user.id
+      }
 
-    blogService
-      .create(blogObject)
-        .then(returnedBlog => {
-          setBlogs(blogs.concat(returnedBlog))
-          setTitle('')
-          setAuthor('')
-          setUrl('')
-        })
+      blogService
+        .create(blogObject)
+          .then(returnedBlog => {
+            setBlogs(blogs.concat(returnedBlog))
+            notifyWith(`a new blog ${title} by ${author} added`)
+            setTitle('')
+            setAuthor('')
+            setUrl('')
+          })
+    } catch(expection) {
+      console.log("createblog failed and catch")
+      notifyWith('invalid blog post', 'error')
+    }
+    
+  }
+  const notifyWith = (message, type='info') => {
+    setInfo({
+      message, type
+    })
+
+    setTimeout(() => {
+      setInfo({ message: null} )
+    }, 5000)
   }
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
     try {
       const user = await loginService.login({
         username, password,
@@ -63,14 +78,13 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
+      notifyWith( `${user.username} logged in succesfully` )
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      notifyWith( 'Wrong credentials' , 'error')
     }
+    
   }
 
   const handleLogout = async (event) => {
@@ -137,7 +151,7 @@ const App = () => {
   return (
     <div>
       <h1>Blogs</h1>
-      <Notification message={errorMessage} />
+      <Notification info={info} />
       {!user && loginForm()} 
       {user && <div>
           {loggedInForm()}
