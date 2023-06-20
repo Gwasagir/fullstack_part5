@@ -6,8 +6,11 @@ import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
 
   const [username, setUsername] = useState('') 
   const [user, setUser] = useState(null)
@@ -28,6 +31,24 @@ const App = () => {
     }
   }, [])
 
+  const createBlog= (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: title,
+      author: author,
+      url: url,
+      userId: user.id
+    }
+
+    blogService
+      .create(blogObject)
+        .then(returnedBlog => {
+          setBlogs(blogs.concat(returnedBlog))
+          setTitle('')
+          setAuthor('')
+          setUrl('')
+        })
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -80,11 +101,35 @@ const App = () => {
     </form>      
   )
 
-  const loggedIn = () => (
+  const loggedInForm = () => (
     <div>
       <form onSubmit={handleLogout}>
       {user.username} logged in 
         <button type="submit">logout</button>
+      </form>
+
+      <h2>create new</h2>
+
+      <form onSubmit={createBlog}>
+        <div>title:
+          <input
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+          />
+        </div>
+        <div>author:
+          <input
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+        </div>
+        <div>url:
+          <input
+            value={url}
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </div>
+        <button type="submit">create</button>
       </form>
     </div>
   )
@@ -93,13 +138,11 @@ const App = () => {
     <div>
       <h1>Blogs</h1>
       <Notification message={errorMessage} />
-
-      <h2>Blog posts</h2>
-
-      {user === null ?
-      loginForm() :
-      loggedIn()
-    }
+      {!user && loginForm()} 
+      {user && <div>
+          {loggedInForm()}
+        </div>
+      }
     <br></br>
 
       {blogs.map(blog =>
