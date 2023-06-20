@@ -33,28 +33,26 @@ const App = () => {
 
   const createBlog= (event) => {
     event.preventDefault()
-    try {
       const blogObject = {
         title: title,
         author: author,
         url: url,
         userId: user.id
       }
-
+      try {
       blogService
         .create(blogObject)
           .then(returnedBlog => {
+            console.log("here")
             setBlogs(blogs.concat(returnedBlog))
             notifyWith(`a new blog ${title} by ${author} added`)
             setTitle('')
             setAuthor('')
             setUrl('')
-          })
-    } catch(expection) {
-      console.log("createblog failed and catch")
-      notifyWith('invalid blog post', 'error')
+          })    
+    } catch(error) {
+      notifyWith(('invalid blog post', 'error'))
     }
-    
   }
   const notifyWith = (message, type='info') => {
     setInfo({
