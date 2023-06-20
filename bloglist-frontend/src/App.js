@@ -3,14 +3,12 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import CreateBlogForm from './components/CreateBlogForm'
+import Togglable from './components/Toggleable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [info, setInfo] = useState({ message: null})
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
 
   const [username, setUsername] = useState('') 
   const [user, setUser] = useState(null)
@@ -31,34 +29,20 @@ const App = () => {
     }
   }, [])
 
-  const createBlog= (event) => {
-    event.preventDefault()
-      const blogObject = {
-        title: title,
-        author: author,
-        url: url,
-        userId: user.id
-      }
+  const createBlogPost= async (blogObject) => {
       try {
-      blogService
-        .create(blogObject)
-          .then(returnedBlog => {
-            console.log("here")
-            setBlogs(blogs.concat(returnedBlog))
-            notifyWith(`a new blog ${title} by ${author} added`)
-            setTitle('')
-            setAuthor('')
-            setUrl('')
-          })    
-    } catch(error) {
-      notifyWith(('invalid blog post', 'error'))
+      const returnedBlogObj = await blogService.create(blogObject) // error happens here but cant stop promise handling
+      setBlogs(blogs.concat(returnedBlogObj))
+      notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
+    } catch(exception) {
+      notifyWith( 'invalid blog post', 'error' )
     }
   }
+  
   const notifyWith = (message, type='info') => {
     setInfo({
       message, type
     })
-
     setTimeout(() => {
       setInfo({ message: null} )
     }, 5000)
@@ -82,7 +66,6 @@ const App = () => {
     } catch (exception) {
       notifyWith( 'Wrong credentials' , 'error')
     }
-    
   }
 
   const handleLogout = async (event) => {
@@ -119,30 +102,6 @@ const App = () => {
       {user.username} logged in 
         <button type="submit">logout</button>
       </form>
-
-      <h2>create new</h2>
-
-      <form onSubmit={createBlog}>
-        <div>title:
-          <input
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>author:
-          <input
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>url:
-          <input
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
     </div>
   )
 
@@ -154,6 +113,14 @@ const App = () => {
       {user && <div>
           {loggedInForm()}
         </div>
+      }
+      {user && 
+        <Togglable buttonLabel="show create">
+          <CreateBlogForm
+            createBlogPost={createBlogPost}
+            userId={user.id}
+          />
+        </Togglable>
       }
     <br></br>
 
