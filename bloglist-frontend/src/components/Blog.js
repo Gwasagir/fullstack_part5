@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 const Blog = ({blog}) => {
-  console.log('username' ,blog)
   const [visible, setVisible] = useState(false)
   const hideWhenVisible = { 
     paddingTop: 10,
