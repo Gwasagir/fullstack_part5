@@ -36,6 +36,8 @@ const App = () => {
   }, [])
 
   const createBlogPost= (blogObject) => {
+    // const config = { headers: { userId: user.id } }
+    // blogObject.push(config)
     blogService
       .create(blogObject)
       .then(returnedBlogObj => {
@@ -126,7 +128,7 @@ const App = () => {
         <Togglable buttonLabel="show create">
           <CreateBlogForm
             createBlogPost={createBlogPost}
-            userId={user.id}
+            // userId={user.id}
           />
         </Togglable>
       }
