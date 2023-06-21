@@ -25,7 +25,8 @@ blogRouter.post('/', async (request, response, next) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: user.id
+    user: user.id,
+    usersname: user.name
   })
   try {
     const savedPost = await post.save()
@@ -62,10 +63,11 @@ blogRouter.put('/:id', async (request, response, next) => {
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: body.likes
+    likes: body.likes,
+    usersname: body.usersname
   }
-  const updatedPost = await Blog.findByIdAndUpdate(request.params.id, post, { new: true, runValidators: true })
   try {
+    const updatedPost = await Blog.findByIdAndUpdate(request.params.id, post, { new: true, runValidators: true })
     response.json(updatedPost)
     response.status(200).json({ message: 'Update post successful!' })
   } catch(error) {

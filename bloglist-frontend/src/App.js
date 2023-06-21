@@ -35,20 +35,21 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlogObj => {
+        console.log(returnedBlogObj)
         setBlogs(blogs.concat(returnedBlogObj))
         notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
         blogFormRef.current.toggleVisibility()
         })
       .catch(error => notifyWith( error.response.data.error, 'error'))
   }
-
+  
   const notifyWith = (message, type='info') => {
     setInfo({
       message, type
     })
     setTimeout(() => {
       setInfo({ message: null} )
-    }, 5000)
+    }, 4000)
   }
 
   const handleLogin = async (event) => {
@@ -108,7 +109,6 @@ const App = () => {
         </Togglable>
       }
     <br></br>
-
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog}/>
       )}
