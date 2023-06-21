@@ -30,6 +30,7 @@ const CreateBlogForm = ({
           <input
             value={newTitle}
             onChange={event => setNewTitle(event.target.value)}
+            placeholder='write blog title here'
           />
         </div>
         <div>author:

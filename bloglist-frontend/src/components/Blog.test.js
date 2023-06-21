@@ -1,16 +1,55 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
-import Note from './Note'
+import userEvent from '@testing-library/user-event'
+import Blog from './Blog'
 
-test('renders content', () => {
-  const note = {
-    content: 'Component testing is done with react-testing-library',
-    important: true
-  }
+describe('blogRendering', () => {
+  let container
 
-  render(<Note note={note} />)
+  beforeEach(() => {
+    const blog = {
+      title: 'Book of TestLib',
+      author: 'James Jest',
+      url: 'http://testing-library.react',
+      user: 'null'
+    }
+    container = render(
+      <Blog blog={blog} />
+    ).container
+  })
 
-  const element = screen.getByText('Component testing is done with react-testing-library')
-  expect(element).toBeDefined()
+  test('renders blog title and author', () => {
+    const blogElement = container.querySelector('.blogDefaultView')
+    const hiddenElement = container.querySelector('.blowExpandedView')
+    expect(blogElement).toBeDefined()
+    expect(hiddenElement).toBeDefined()
+  })
+
+  test('renders blog url and likes when "view" button is pressed', async () => {
+    const user = userEvent.setup()
+    const button = container.querySelector('.buttonViewBlog')
+    await user.click(button)
+    const blogElement = container.querySelector('.blowExpandedView')
+    expect(blogElement).toBeDefined()
+  })
+
+  test('pressing like twice, calls event handler twice', async () => {
+    const blog = {
+      title: 'Book of TestLib',
+      author: 'James Jest',
+      url: 'http://testing-library.react',
+      user: 'null'
+    }
+    const mockHandler = jest.fn()
+    container = render(
+      <Blog blog={blog} handleLikePost={mockHandler}/>
+    ).container
+
+    const user = userEvent.setup()
+    const button = container.querySelector('.likeButton')
+    await user.click(button)
+    await user.click(button)
+    expect(mockHandler.mock.calls).toHaveLength(2)
+  })
 })
