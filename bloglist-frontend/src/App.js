@@ -24,7 +24,7 @@ const App = () => {
       setBlogs( blogList )
     }
     getBlogs()
-  }, [])
+  }, [blogs])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -34,19 +34,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
-  const createBlogPost= (blogObject) => {
-    // const config = { headers: { userId: user.id } }
-    // blogObject.push(config)
-    blogService
-      .create(blogObject)
-      .then(returnedBlogObj => {
-        setBlogs(blogs.concat(returnedBlogObj))
-        notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
-        blogFormRef.current.toggleVisibility()
-      })
-      .catch(error => notifyWith( error.response.data.error, 'error'))
-  }
 
   const handleLikePost = (blog, likes) => {
     blogService
@@ -109,6 +96,17 @@ const App = () => {
       .then()
   }
 
+  const createBlogPost= (blogObject) => {
+    blogService
+      .create(blogObject)
+      .then(returnedBlogObj => {
+        setBlogs(blogs.concat(returnedBlogObj))
+        notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
+        blogFormRef.current.toggleVisibility()
+      })
+      .catch(error => notifyWith( error.response.data.error, 'error'))
+  }
+
   return (
     <div>
       <h1>Blogs</h1>
@@ -128,7 +126,6 @@ const App = () => {
         <Togglable buttonLabel="show create">
           <CreateBlogForm
             createBlogPost={createBlogPost}
-            // userId={user.id}
           />
         </Togglable>
       }

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 const CreateBlogForm = ({
   createBlogPost,
-  // userId
 }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
@@ -15,7 +14,6 @@ const CreateBlogForm = ({
       title: newTitle,
       author: newAuthor,
       url: newUrl,
-      // userId: userId
     })
     setNewTitle('')
     setNewAuthor('')
@@ -55,7 +53,6 @@ const CreateBlogForm = ({
 
 CreateBlogForm.propTypes = {
   createBlogPost: PropTypes.func.isRequired,
-  // userId: PropTypes.func.isRequired
 }
 
 export default CreateBlogForm
