@@ -1,30 +1,30 @@
-import { useState } from "react"
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const CreateBlogForm = ({
-    createBlogPost,
-    userId
-  }) => {
-    const [newTitle, setNewTitle] = useState('')
-    const [newAuthor, setNewAuthor] = useState('')
-    const [newUrl, setNewUrl] = useState('')
+  createBlogPost,
+  userId
+}) => {
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
 
-    const addBlogPost = (event) => {
-        event.preventDefault()
-        createBlogPost({
-            title: newTitle,
-            author: newAuthor,
-            url: newUrl,
-            userId: userId
-        })
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
-    }
+  const addBlogPost = (event) => {
+    event.preventDefault()
+    createBlogPost({
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
+      userId: userId
+    })
+    setNewTitle('')
+    setNewAuthor('')
+    setNewUrl('')
+  }
 
-    return (
-      <div>
-        <h2>create new</h2>
+  return (
+    <div>
+      <h2>create new</h2>
       <form onSubmit={addBlogPost}>
         <div>title:
           <input
@@ -48,11 +48,11 @@ const CreateBlogForm = ({
       </form>
     </div>
   )
-  }
+}
 
 CreateBlogForm.propTypes = {
   createBlogPost: PropTypes.func.isRequired,
   userId: PropTypes.func.isRequired
 }
 
-  export default CreateBlogForm
+export default CreateBlogForm

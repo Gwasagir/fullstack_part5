@@ -9,17 +9,17 @@ import Togglable from './components/Toggleable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [info, setInfo] = useState({ message: null})
+  const [info, setInfo] = useState({ message: null })
   const blogFormRef = useRef()
 
-  const [username, setUsername] = useState('') 
+  const [username, setUsername] = useState('')
   const [user, setUser] = useState(null)
-  const [password, setPassword] = useState('') 
+  const [password, setPassword] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -38,20 +38,20 @@ const App = () => {
         setBlogs(blogs.concat(returnedBlogObj))
         notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
         blogFormRef.current.toggleVisibility()
-        })
+      })
       .catch(error => notifyWith( error.response.data.error, 'error'))
   }
-  
+
   const handleLikePost = (blog, likes) => {
     blogService
-    .update(blog.id, {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      user: blog.user,
-      usersname: blog.usersname,
-      likes: likes
-    })
+      .update(blog.id, {
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        user: blog.user,
+        usersname: blog.usersname,
+        likes: likes
+      })
   }
 
 
@@ -60,7 +60,7 @@ const App = () => {
       message, type
     })
     setTimeout(() => {
-      setInfo({ message: null} )
+      setInfo({ message: null } )
     }, 4000)
   }
 
@@ -84,14 +84,14 @@ const App = () => {
     }
   }
 
-  const handleLogout = async (event) => {
+  const handleLogout = async () => {
     window.localStorage.clear()
   }
 
   const loggedInView = () => (
     <div>
       <form onSubmit={handleLogout}>
-      {user.username} logged in 
+        {user.username} logged in
         <button type="submit">logout</button>
       </form>
     </div>
@@ -99,21 +99,21 @@ const App = () => {
 
   const handleDeletePost = (blogId) => {
     blogService
-        .deleteBlog(blogId, `Bearer ${ user.token }`)
-        .then()
-}
+      .deleteBlog(blogId, `Bearer ${ user.token }`)
+      .then()
+  }
 
   const showBlogs = () => {
     const username = user ? user.username : 'none'
     const blogList = [].concat(blogs)
       .sort((a,b) => a.likes < b.likes ? 1 : -1)
       .map(blog =>
-        <Blog key={blog.id} 
-        blog={blog} 
-        handleLikePost={handleLikePost} 
-        handleDeletePost={handleDeletePost}
-        username={username} />
-    )
+        <Blog key={blog.id}
+          blog={blog}
+          handleLikePost={handleLikePost}
+          handleDeletePost={handleDeletePost}
+          username={username} />
+      )
     return blogList
   }
 
@@ -121,7 +121,7 @@ const App = () => {
     <div>
       <h1>Blogs</h1>
       <Notification info={info} />
-      {!user && 
+      {!user &&
         <Togglable buttonLabel="log in">
           <LoginForm
             username={username}
@@ -130,9 +130,9 @@ const App = () => {
             handlePasswordChange={({ target }) => setPassword(target.value)}
             handleSubmit={handleLogin}
           />
-        </Togglable>} 
+        </Togglable>}
       {user && <div> {loggedInView()} </div> }
-      {user && 
+      {user &&
         <Togglable buttonLabel="show create">
           <CreateBlogForm
             createBlogPost={createBlogPost}
@@ -140,8 +140,8 @@ const App = () => {
           />
         </Togglable>
       }
-    <br></br>
-    {showBlogs()}
+      <br></br>
+      {showBlogs()}
 
     </div>
   )

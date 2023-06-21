@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react'
 
-const Blog = ({blog, handleLikePost, handleDeletePost, username}) => {
+const Blog = ({ blog, handleLikePost, handleDeletePost, username }) => {
   const [visible, setVisible] = useState(false)
   const [likes, setLikes] = useState(0)
 
   useEffect(() => {setLikes(blog.likes)}, [blog.likes])
 
-  const hideWhenVisible = { 
+  const hideWhenVisible = {
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-    display: visible ? 'none' : '' 
+    display: visible ? 'none' : ''
   }
   const showWhenVisible = {
     paddingTop: 10,
@@ -20,7 +20,7 @@ const Blog = ({blog, handleLikePost, handleDeletePost, username}) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-    display: visible ? '' : 'none' 
+    display: visible ? '' : 'none'
   }
 
   const toggleDetails = () => {
@@ -50,15 +50,15 @@ const Blog = ({blog, handleLikePost, handleDeletePost, username}) => {
       <div style={hideWhenVisible}>
         {blog.title} {blog.author}
         <button onClick={toggleDetails}>view</button>
-        </div>  
-        <div style={showWhenVisible}>
-          {blog.title} {blog.author} 
-          <button onClick={toggleDetails}>hide</button> <br></br>
-          {blog.url} <br></br>
+      </div>
+      <div style={showWhenVisible}>
+        {blog.title} {blog.author}
+        <button onClick={toggleDetails}>hide</button> <br></br>
+        {blog.url} <br></br>
           likes {likes} <button onClick={likePost}>like</button> <br></br>
-          {blog.usersname}
-          {deletePost()}
-        </div>
+        {blog.usersname}
+        {deletePost()}
+      </div>
     </div>
   )
 }
