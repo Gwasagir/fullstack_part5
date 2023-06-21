@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -10,6 +10,7 @@ import Togglable from './components/Toggleable'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [info, setInfo] = useState({ message: null})
+  const blogFormRef = useRef()
 
   const [username, setUsername] = useState('') 
   const [user, setUser] = useState(null)
@@ -30,17 +31,17 @@ const App = () => {
     }
   }, [])
 
-  const createBlogPost= async (blogObject) => {
-      try {
-        const returnedBlogObj = await blogService.create(blogObject)
+  const createBlogPost= (blogObject) => {
+    blogService
+      .create(blogObject)
+      .then(returnedBlogObj => {
         setBlogs(blogs.concat(returnedBlogObj))
-        console.log('created new blogpost')
         notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
-    } catch(exception) {
-      notifyWith( 'invalid blog post', 'error' )
-    }
+        blogFormRef.current.toggleVisibility()
+        })
+      .catch(error => notifyWith( error.response.data.error, 'error'))
   }
-  
+
   const notifyWith = (message, type='info') => {
     setInfo({
       message, type
