@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
-import blogService from '../services/blogs'
 
-const Blog = ({blog, handleLikePost}) => {
+const Blog = ({blog, handleLikePost, handleDeletePost, username}) => {
   const [visible, setVisible] = useState(false)
   const [likes, setLikes] = useState(0)
 
@@ -35,20 +34,32 @@ const Blog = ({blog, handleLikePost}) => {
     handleLikePost(blog, postLikes)
   }
 
+  const deletePostButton = async (event) => {
+    event.preventDefault()
+    handleDeletePost(blog.id)
+  }
+
+  const deletePost = () => {
+    if(username === blog.user[0].username) {
+      return(<button onClick={deletePostButton}>delete</button>)
+    }
+  }
+
   return(
     <div>
       <div style={hideWhenVisible}>
         {blog.title} {blog.author}
         <button onClick={toggleDetails}>view</button>
-      </div>  
-      <div style={showWhenVisible}>
-        {blog.title} {blog.author} 
-        <button onClick={toggleDetails}>hide</button> <br></br>
-        {blog.url} <br></br>
-        likes {likes} <button onClick={likePost}>like</button> <br></br>
-        {blog.usersname}
-      </div>
-  </div>
+        </div>  
+        <div style={showWhenVisible}>
+          {blog.title} {blog.author} 
+          <button onClick={toggleDetails}>hide</button> <br></br>
+          {blog.url} <br></br>
+          likes {likes} <button onClick={likePost}>like</button> <br></br>
+          {blog.usersname}
+          {deletePost()}
+        </div>
+    </div>
   )
 }
 export default Blog

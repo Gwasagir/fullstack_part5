@@ -54,6 +54,7 @@ const App = () => {
     })
   }
 
+
   const notifyWith = (message, type='info') => {
     setInfo({
       message, type
@@ -96,11 +97,21 @@ const App = () => {
     </div>
   )
 
+  const handleDeletePost = (blogId) => {
+    blogService
+        .deleteBlog(blogId, `Bearer ${ user.token }`)
+        .then()
+}
+
   const showBlogs = () => {
     const blogList = [].concat(blogs)
       .sort((a,b) => a.likes < b.likes ? 1 : -1)
       .map(blog =>
-        <Blog key={blog.id} blog={blog} handleLikePost={handleLikePost} />
+        <Blog key={blog.id} 
+        blog={blog} 
+        handleLikePost={handleLikePost} 
+        handleDeletePost={handleDeletePost}
+        username={user.username} />
     )
     return blogList
   }
