@@ -104,6 +104,7 @@ const App = () => {
 }
 
   const showBlogs = () => {
+    const username = user ? user.username : 'none'
     const blogList = [].concat(blogs)
       .sort((a,b) => a.likes < b.likes ? 1 : -1)
       .map(blog =>
@@ -111,7 +112,7 @@ const App = () => {
         blog={blog} 
         handleLikePost={handleLikePost} 
         handleDeletePost={handleDeletePost}
-        username={user.username} />
+        username={username} />
     )
     return blogList
   }
