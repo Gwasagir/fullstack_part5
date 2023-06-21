@@ -96,6 +96,15 @@ const App = () => {
     </div>
   )
 
+  const showBlogs = () => {
+    const blogList = [].concat(blogs)
+      .sort((a,b) => a.likes < b.likes ? 1 : -1)
+      .map(blog =>
+        <Blog key={blog.id} blog={blog} handleLikePost={handleLikePost} />
+    )
+    return blogList
+  }
+
   return (
     <div>
       <h1>Blogs</h1>
@@ -120,9 +129,7 @@ const App = () => {
         </Togglable>
       }
     <br></br>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleLikePost={handleLikePost} />
-      )}
+    {showBlogs()}
 
     </div>
   )
