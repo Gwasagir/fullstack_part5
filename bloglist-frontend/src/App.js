@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import CreateBlogForm from './components/CreateBlogForm'
+import LoginForm from './components/LoginForm'
 import Togglable from './components/Toggleable'
 
 const App = () => {
@@ -31,9 +32,10 @@ const App = () => {
 
   const createBlogPost= async (blogObject) => {
       try {
-      const returnedBlogObj = await blogService.create(blogObject) // error happens here but cant stop promise handling
-      setBlogs(blogs.concat(returnedBlogObj))
-      notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
+        const returnedBlogObj = await blogService.create(blogObject)
+        setBlogs(blogs.concat(returnedBlogObj))
+        console.log('created new blogpost')
+        notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
     } catch(exception) {
       notifyWith( 'invalid blog post', 'error' )
     }
@@ -72,30 +74,6 @@ const App = () => {
     window.localStorage.clear()
   }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-          <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-          <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>      
-  )
-
   const loggedInForm = () => (
     <div>
       <form onSubmit={handleLogout}>
@@ -109,11 +87,17 @@ const App = () => {
     <div>
       <h1>Blogs</h1>
       <Notification info={info} />
-      {!user && loginForm()} 
-      {user && <div>
-          {loggedInForm()}
-        </div>
-      }
+      {!user && 
+        <Togglable buttonLabel="log in">
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>} 
+      {user && <div> {loggedInForm()} </div> }
       {user && 
         <Togglable buttonLabel="show create">
           <CreateBlogForm

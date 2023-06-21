@@ -23,6 +23,8 @@ const Blog = ({blog}) => {
     setVisible(!visible)
   }
 
+  const likePost = () => {}
+
   return(
     <div>
       <div style={hideWhenVisible}>
@@ -33,7 +35,7 @@ const Blog = ({blog}) => {
         {blog.title} {blog.author} 
         <button onClick={toggleDetails}>hide</button> <br></br>
         {blog.url} <br></br>
-        likes {blog.likes} <br></br>
+        likes {blog.likes} <button onClick={likePost}>like</button> <br></br>
         {blog.user[0].name}
       </div>
   </div>
