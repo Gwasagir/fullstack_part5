@@ -33,4 +33,5 @@ const deleteBlog = (id, token) => {
   return request.then(response => response.data)
 }
 
+// eslint-disable-next-line
 export default { getAll, create, update, setToken, deleteBlog }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const Blog = ({ blog, handleLikePost, handleDeletePost, username }) => {
+const Blog = ({ blog, handleLikePost, handleDeletePost, user }) => {
   const [visible, setVisible] = useState(false)
   const [likes, setLikes] = useState(0)
 
@@ -40,6 +40,7 @@ const Blog = ({ blog, handleLikePost, handleDeletePost, username }) => {
   }
 
   const deletePost = () => {
+    const username = user ? user.username : 'none'
     if(username === blog.user[0].username) {
       return(<button onClick={deletePostButton}>delete</button>)
     }

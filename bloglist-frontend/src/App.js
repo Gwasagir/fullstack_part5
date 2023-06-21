@@ -17,9 +17,13 @@ const App = () => {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
+    async function getBlogs() {
+      const getBlogs = await blogService.getAll()
+      const blogList = [].concat(getBlogs)
+        .sort((a,b) => a.likes < b.likes ? 1 : -1)
+      setBlogs( blogList )
+    }
+    getBlogs()
   }, [])
 
   useEffect(() => {
@@ -103,20 +107,6 @@ const App = () => {
       .then()
   }
 
-  const showBlogs = () => {
-    const username = user ? user.username : 'none'
-    const blogList = [].concat(blogs)
-      .sort((a,b) => a.likes < b.likes ? 1 : -1)
-      .map(blog =>
-        <Blog key={blog.id}
-          blog={blog}
-          handleLikePost={handleLikePost}
-          handleDeletePost={handleDeletePost}
-          username={username} />
-      )
-    return blogList
-  }
-
   return (
     <div>
       <h1>Blogs</h1>
@@ -140,8 +130,15 @@ const App = () => {
           />
         </Togglable>
       }
-      <br></br>
-      {showBlogs()}
+      <ul>
+        {blogs.map((blog =>
+          <Blog key={blog.id}
+            blog={blog}
+            handleLikePost={handleLikePost}
+            handleDeletePost={handleDeletePost}
+            user={user} />
+        ))}
+      </ul>
 
     </div>
   )
