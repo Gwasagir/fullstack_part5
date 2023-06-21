@@ -1,8 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({blog}) => {
+const Blog = ({blog, handleLikePost}) => {
   const [visible, setVisible] = useState(false)
+  const [likes, setLikes] = useState(0)
+
+  useEffect(() => {setLikes(blog.likes)}, [blog.likes])
+
   const hideWhenVisible = { 
     paddingTop: 10,
     paddingLeft: 2,
@@ -24,20 +28,11 @@ const Blog = ({blog}) => {
     setVisible(!visible)
   }
 
-  const likePost = () => {
-    blogService
-    .update(blog.id, {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      user: blog.user,
-      usersname: blog.usersname,
-      likes: blog.likes+1
-    })
-    .then(returnedObject => {
-      console.log(returnedObject)
-      console.log("Hey")
-    })
+  const likePost = async (event) => {
+    event.preventDefault()
+    const postLikes = await likes+1
+    setLikes(postLikes)
+    handleLikePost(blog, postLikes)
   }
 
   return(
@@ -50,7 +45,7 @@ const Blog = ({blog}) => {
         {blog.title} {blog.author} 
         <button onClick={toggleDetails}>hide</button> <br></br>
         {blog.url} <br></br>
-        likes {blog.likes} <button onClick={likePost}>like</button> <br></br>
+        likes {likes} <button onClick={likePost}>like</button> <br></br>
         {blog.usersname}
       </div>
   </div>

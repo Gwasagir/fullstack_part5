@@ -42,9 +42,7 @@ blogRouter.post('/', async (request, response, next) => {
 blogRouter.delete('/:id', async (request, response) => {
   if (!request.token) return response.status(401).json({ error: 'token missing' })
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
+  if (!decodedToken.id) { return response.status(401).json({ error: 'token invalid' }) }
   const user = await User.findById(decodedToken.id)
   const blogpost = await Blog.findById(request.params.id)
 
@@ -58,7 +56,6 @@ blogRouter.delete('/:id', async (request, response) => {
 
 blogRouter.put('/:id', async (request, response, next) => {
   const body = request.body
-
   const post = {
     title: body.title,
     author: body.author,
@@ -69,7 +66,7 @@ blogRouter.put('/:id', async (request, response, next) => {
   try {
     const updatedPost = await Blog.findByIdAndUpdate(request.params.id, post, { new: true, runValidators: true })
     response.json(updatedPost)
-    response.status(200).json({ message: 'Update post successful!' })
+    // response.status(200).json({ message: 'Update post successful!' })
   } catch(error) {
     next(error)
   }

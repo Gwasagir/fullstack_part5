@@ -35,7 +35,6 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlogObj => {
-        console.log(returnedBlogObj)
         setBlogs(blogs.concat(returnedBlogObj))
         notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
         blogFormRef.current.toggleVisibility()
@@ -43,6 +42,18 @@ const App = () => {
       .catch(error => notifyWith( error.response.data.error, 'error'))
   }
   
+  const handleLikePost = (blog, likes) => {
+    blogService
+    .update(blog.id, {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      user: blog.user,
+      usersname: blog.usersname,
+      likes: likes
+    })
+  }
+
   const notifyWith = (message, type='info') => {
     setInfo({
       message, type
@@ -76,7 +87,7 @@ const App = () => {
     window.localStorage.clear()
   }
 
-  const loggedInForm = () => (
+  const loggedInView = () => (
     <div>
       <form onSubmit={handleLogout}>
       {user.username} logged in 
@@ -99,7 +110,7 @@ const App = () => {
             handleSubmit={handleLogin}
           />
         </Togglable>} 
-      {user && <div> {loggedInForm()} </div> }
+      {user && <div> {loggedInView()} </div> }
       {user && 
         <Togglable buttonLabel="show create">
           <CreateBlogForm
@@ -110,7 +121,7 @@ const App = () => {
       }
     <br></br>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog}/>
+        <Blog key={blog.id} blog={blog} handleLikePost={handleLikePost} />
       )}
 
     </div>
