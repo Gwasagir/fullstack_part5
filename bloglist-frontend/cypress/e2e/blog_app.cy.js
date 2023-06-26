@@ -28,12 +28,21 @@ describe('Blog app', function() {
       cy.get('#password').type(test_password)
       cy.get('#login-button').click()
 
-      cy.contains(`${test_name} logged in`)
+      cy.get('html').should('contain',`${test_name} logged in`)
       cy.get('form').contains('logout')
     })
 
     it('fails with wrong credentials', function() {
-      // ...
+      cy.contains('log in').click()
+      cy.get('#username').type(test_username)
+      cy.get('#password').type('totallywrongpassword')
+      cy.get('#login-button').click()
+
+      cy.get('.error').should('contain','Wrong credentials')
+      cy.get('.error').should('have.css', 'color', 'rgb(255, 0, 0)')
+      cy.get('.error').should('have.css', 'border-style', 'solid')
+      cy.get('html').should('not.contain',`${test_name} logged in`)
+      cy.get('form').contains('login')
     })
   })
   
