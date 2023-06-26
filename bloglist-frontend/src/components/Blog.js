@@ -29,7 +29,7 @@ const Blog = ({ blog, handleLikePost, handleDeletePost, user }) => {
 
   const likePost = async (event) => {
     event.preventDefault()
-    const postLikes = await likes+1
+    const postLikes = likes+1
     setLikes(postLikes)
     handleLikePost(blog, postLikes)
   }
@@ -49,16 +49,20 @@ const Blog = ({ blog, handleLikePost, handleDeletePost, user }) => {
   return(
     <div>
       <div style={hideWhenVisible} className='blogDefaultView'>
-        {blog.title} {blog.author}
+        <span>{blog.title} {blog.author}</span>
         <button onClick={toggleDetails} className='buttonViewBlog'>view</button>
       </div>
-      <div style={showWhenVisible} className='blowExpandedView'>
+      <div style={showWhenVisible} className='blogExpandedView'>
         {blog.title} {blog.author}
-        <button onClick={toggleDetails} className='buttonHideBlog'>hide</button> <br></br>
+
+        <button onClick={toggleDetails} className='buttonHideBlog'>hide</button>
+        <br></br>
+
         {blog.url} <br></br>
-          likes {likes} <button onClick={likePost} className='likeButton'>like</button> <br></br>
-        {blog.usersname}
-        {deletePost()}
+        likes {likes}
+        <button onClick={likePost} className='likeButton'>like</button>
+        <br></br>
+        {blog.usersname} {deletePost()}
       </div>
     </div>
   )

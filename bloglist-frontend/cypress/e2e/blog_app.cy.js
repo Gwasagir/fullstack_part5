@@ -65,5 +65,35 @@ describe('Blog app', function() {
 
       cy.contains('Book of Cypress')
     })
+
+    // describe('Modifying and viewing created post', function() {
+    //   beforeEach(function() {
+    //     cy.request({
+    //       method: 'POST',
+    //       url: `${Cypress.env('BACKEND')}/blogs`,
+    //       form: true,
+    //       body: {
+    //         title: 'Book of Cypress',
+    //         author: 'J. K. Rower',
+    //         url:'http://testspace.fi'
+    //       },
+    //     })
+    //     cy.visit('')
+    //   })
+    // })
+
+    it('A blog can be liked', function() {
+      cy.contains('show create').click()
+      cy.get('input[placeholder="write blog title here"]').type('Book of Cypress')
+      cy.get('input[placeholder="write author here"]').type('J. K. Rower')
+      cy.get('input[placeholder="write url here"]').type('http://testspace.fi')
+      cy.get('#create-button').click()
+
+      cy.contains('view').click()
+      cy.get('html').should('contain', 'likes 0')
+      cy.contains('like').click()
+      cy.get('html').should('contain', 'likes 1')
+    })
+
   })
 })

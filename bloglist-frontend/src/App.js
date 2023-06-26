@@ -45,8 +45,8 @@ const App = () => {
         user: blog.user,
         usersname: blog.usersname,
         likes: likes
-          .then(setDummy('liked post'))
       })
+      .then(setDummy(`likes ${likes} ${blog.title}`))
   }
 
 
@@ -96,7 +96,6 @@ const App = () => {
     blogService
       .deleteBlog(blogId, `Bearer ${ user.token }`)
       .then(function() {
-        setDummy('deleted post')
         notifyWith( 'Post deleted')})
   }
 
@@ -109,6 +108,7 @@ const App = () => {
         notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
       })
       .catch(error => notifyWith( error.response.data.error, 'error'))
+    setDummy('createdpost')
   }
 
   return (
