@@ -24,7 +24,7 @@ const App = () => {
       setBlogs( blogList )
     }
     getBlogs()
-  }, [blogs])
+  }, [info])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -93,7 +93,7 @@ const App = () => {
   const handleDeletePost = (blogId) => {
     blogService
       .deleteBlog(blogId, `Bearer ${ user.token }`)
-      .then()
+      .then(notifyWith( 'Post deleted'))
   }
 
   const createBlogPost= (blogObject) => {
