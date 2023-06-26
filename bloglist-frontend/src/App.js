@@ -46,7 +46,10 @@ const App = () => {
         usersname: blog.usersname,
         likes: likes
       })
-      .then(setDummy(`likes ${likes} ${blog.title}`))
+      .then(    setTimeout(() => {
+        setDummy(`likes ${likes} ${blog.title}`)
+      }, 50)
+      )
   }
 
 
@@ -96,7 +99,11 @@ const App = () => {
     blogService
       .deleteBlog(blogId, `Bearer ${ user.token }`)
       .then(function() {
-        notifyWith( 'Post deleted')})
+        notifyWith( 'Post deleted')
+        setTimeout(() => {
+          setDummy(`createdpost ${blogId}`)
+        }, 50)
+      })
   }
 
   const createBlogPost= (blogObject) => {
@@ -108,7 +115,9 @@ const App = () => {
         notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
       })
       .catch(error => notifyWith( error.response.data.error, 'error'))
-    setDummy('createdpost')
+    setTimeout(() => {
+      setDummy(`createdpost ${blogObject.title}`)
+    }, 50)
   }
 
   return (
