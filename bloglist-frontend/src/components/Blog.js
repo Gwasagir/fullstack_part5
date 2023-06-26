@@ -42,7 +42,7 @@ const Blog = ({ blog, handleLikePost, handleDeletePost, user }) => {
   const deletePost = () => {
     const username = user ? user.username : 'none'
     if(username === blog.user[0].username) {
-      return(<button onClick={deletePostButton}>delete</button>)
+      return(<button onClick={deletePostButton} id='delete-button' >delete</button>)
     }
   }
 
@@ -60,7 +60,7 @@ const Blog = ({ blog, handleLikePost, handleDeletePost, user }) => {
 
         {blog.url} <br></br>
         likes {likes}
-        <button onClick={likePost} className='likeButton'>like</button>
+        <button onClick={likePost} id='like-button' className='likeButton'>like</button>
         <br></br>
         {blog.usersname} {deletePost()}
       </div>

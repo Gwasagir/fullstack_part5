@@ -95,5 +95,44 @@ describe('Blog app', function() {
       cy.get('html').should('contain', 'likes 1')
     })
 
+    it('A blog can be deleted by the owner', function() {
+      cy.contains('show create').click()
+      cy.get('input[placeholder="write blog title here"]').type('Book of Cypress')
+      cy.get('input[placeholder="write author here"]').type('J. K. Rower')
+      cy.get('input[placeholder="write url here"]').type('http://testspace.fi')
+      cy.get('#create-button').click()
+      cy.contains('view').click()
+      cy.contains('delete').click()
+
+      cy.get('html').should('not.contain', 'Book of Cypress')
+      cy.get('.error').should('contain','Post deleted')
+    })
+
+    it.only('A blog delete button is only visible to the owner', function() {
+      const user = {
+        name: 'Jaana Testaaja',
+        username: 'jaana',
+        password: 'salainen'
+      }
+      cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
+
+      cy.contains('show create').click()
+      cy.get('input[placeholder="write blog title here"]').type('Book of Cypress')
+      cy.get('input[placeholder="write author here"]').type('J. K. Rower')
+      cy.get('input[placeholder="write url here"]').type('http://testspace.fi')
+      cy.get('#create-button').click()
+      cy.get('#logout-button').click()
+
+      cy.request('POST', `${Cypress.env('BACKEND')}/login`, {
+        username: 'jaana', password: 'salainen'
+      }).then(response => {
+        localStorage.setItem('loggedBlogappUser', JSON.stringify(response.body))
+      })
+      cy.visit('')
+
+      cy.contains('view').click()
+      cy.get('#like-button').should('exist')
+      cy.get('#delete-button').should('not.exist')
+    })
   })
 })
