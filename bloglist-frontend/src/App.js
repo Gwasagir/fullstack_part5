@@ -44,6 +44,7 @@ const App = () => {
         user: blog.user,
         usersname: blog.usersname,
         likes: likes
+      .then(setInfo(info))
       })
   }
 
@@ -84,8 +85,8 @@ const App = () => {
   const loggedInView = () => (
     <div>
       <form onSubmit={handleLogout}>
-        {user.username} logged in
-        <button type="submit">logout</button>
+        {user.name} logged in
+        <button id='logout-button' type="submit">logout</button>
       </form>
     </div>
   )
