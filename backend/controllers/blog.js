@@ -15,6 +15,9 @@ blogRouter.post('/', async (request, response, next) => {
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
+  if (!body.title) {
+    return response.status(400).json({ error: 'missing title' })
+  }
   const user = await User.findById(decodedToken.id)
 
   const post = new Blog({
@@ -22,25 +25,24 @@ blogRouter.post('/', async (request, response, next) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: user.id
+    user: user.id,
+    usersname: user.name
   })
   try {
     const savedPost = await post.save()
     user.blogs = user.blogs.concat(savedPost._id)
     await user.save()
     response.status(201).json(savedPost)
-  } catch(expection) {
+  } catch(error) {
     response.status(400)
-    next(expection)
+    next(error)
   }
 })
 
 blogRouter.delete('/:id', async (request, response) => {
   if (!request.token) return response.status(401).json({ error: 'token missing' })
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
+  if (!decodedToken.id) { return response.status(401).json({ error: 'token invalid' }) }
   const user = await User.findById(decodedToken.id)
   const blogpost = await Blog.findById(request.params.id)
 
@@ -54,17 +56,17 @@ blogRouter.delete('/:id', async (request, response) => {
 
 blogRouter.put('/:id', async (request, response, next) => {
   const body = request.body
-
   const post = {
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: body.likes
+    likes: body.likes,
+    usersname: body.usersname
   }
-  const updatedPost = await Blog.findByIdAndUpdate(request.params.id, post, { new: true, runValidators: true })
   try {
+    const updatedPost = await Blog.findByIdAndUpdate(request.params.id, post, { new: true, runValidators: true })
     response.json(updatedPost)
-    response.status(200).json({ message: 'Update post successful!' })
+    // response.status(200).json({ message: 'Update post successful!' })
   } catch(error) {
     next(error)
   }
