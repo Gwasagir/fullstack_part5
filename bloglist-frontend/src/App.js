@@ -10,6 +10,7 @@ import Togglable from './components/Toggleable'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [info, setInfo] = useState({ message: null })
+  const [dummy, setDummy] = useState('')
   const blogFormRef = useRef()
 
   const [username, setUsername] = useState('')
@@ -24,7 +25,7 @@ const App = () => {
       setBlogs( blogList )
     }
     getBlogs()
-  }, [info])
+  }, [dummy])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -44,7 +45,7 @@ const App = () => {
         user: blog.user,
         usersname: blog.usersname,
         likes: likes
-      .then(setInfo(info))
+          .then(setDummy('liked post'))
       })
   }
 
@@ -94,16 +95,18 @@ const App = () => {
   const handleDeletePost = (blogId) => {
     blogService
       .deleteBlog(blogId, `Bearer ${ user.token }`)
-      .then(notifyWith( 'Post deleted'))
+      .then(function() {
+        setDummy('deleted post')
+        notifyWith( 'Post deleted')})
   }
 
   const createBlogPost= (blogObject) => {
+    blogFormRef.current.toggleVisibility()
     blogService
       .create(blogObject)
       .then(returnedBlogObj => {
         setBlogs(blogs.concat(returnedBlogObj))
         notifyWith(`a new blog ${blogObject.title} by ${blogObject.author} added`)
-        blogFormRef.current.toggleVisibility()
       })
       .catch(error => notifyWith( error.response.data.error, 'error'))
   }
@@ -124,7 +127,7 @@ const App = () => {
         </Togglable>}
       {user && <div> {loggedInView()} </div> }
       {user &&
-        <Togglable buttonLabel="show create">
+        <Togglable buttonLabel="show create" ref={blogFormRef} >
           <CreateBlogForm
             createBlogPost={createBlogPost}
           />

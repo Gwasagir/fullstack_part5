@@ -45,7 +45,7 @@ const CreateBlogForm = ({
             placeholder='write url here'
           />
         </div>
-        <button type="submit">create</button>
+        <button id='create-button' type="submit">create</button>
       </form>
     </div>
   )

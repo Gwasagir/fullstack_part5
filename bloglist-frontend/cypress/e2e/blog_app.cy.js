@@ -11,7 +11,7 @@ describe('Blog app', function() {
       password: test_password
     }
     cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
-    cy.visit('')  
+    cy.visit('')
   })
 
   it('Login form is shown by clicking "log in"-button', function() {
@@ -45,7 +45,7 @@ describe('Blog app', function() {
       cy.get('form').contains('login')
     })
   })
-  
+
   describe('When logged in', function(){
     beforeEach(function() {
       cy.request('POST', `${Cypress.env('BACKEND')}/login`, {
@@ -58,7 +58,12 @@ describe('Blog app', function() {
 
     it('A blog can be created', function() {
       cy.contains('show create').click()
+      cy.get('input[placeholder="write blog title here"]').type('Book of Cypress')
+      cy.get('input[placeholder="write author here"]').type('J. K. Rower')
+      cy.get('input[placeholder="write url here"]').type('http://testspace.fi')
+      cy.get('#create-button').click()
 
+      cy.contains('Book of Cypress')
     })
   })
 })
