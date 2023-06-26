@@ -108,7 +108,7 @@ describe('Blog app', function() {
       cy.get('.error').should('contain','Post deleted')
     })
 
-    it.only('A blog delete button is only visible to the owner', function() {
+    it('A blog delete button is only visible to the owner', function() {
       const user = {
         name: 'Jaana Testaaja',
         username: 'jaana',
